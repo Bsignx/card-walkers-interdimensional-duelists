@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
 
-export class StartScene extends Phaser.Scene {
+export class RegistrationScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'StartScene' });
+        super({ key: 'RegistrationScene' });
     }
 
     preload() {
@@ -25,16 +25,16 @@ export class StartScene extends Phaser.Scene {
         // Scale the background to fit the entire screen
         background.setScale(gameWidth / background.width, gameHeight / background.height);
 
+
         // Play background music
         const music = this.sound.add('backgroundMusic', { loop: true }); // Set loop to true for continuous playback
-        music.setVolume(0.5);
+        music.setVolume(0.3);
         music.play();
 
-        // Add a title or logo
-        this.add.text(140, 100, 'Card Walkers Interdimensional Duelists', {
-            fontSize: '16px',
+        // Create input label
+        this.add.text(150, 50, 'Enter your character name', {
+            fontSize: '24px',
             color: '#ffffff',
-            fontStyle: 'bold',
             backgroundColor: '#000',
             shadow: {
                 offsetX: 2,
@@ -52,8 +52,15 @@ export class StartScene extends Phaser.Scene {
             }
         }).setOrigin(0);
 
-        // Add a play button
-        const playButton = this.add.text(300, 300, 'Play', {
+        // Create a text input field for the character's name
+        const nameInput = this.add.dom(430, 200, 'input', 'background-color: #ffffff; padding: 10px; width: 200px; height: 20px; font: 14px Arial');
+        console.log({ nameInput })
+        // Set input field properties
+        nameInput.setScale(2); // Adjust the size as needed
+        nameInput.addListener('keydown');
+
+        // Create a submit button
+        const submitButton = this.add.text(350, 300, 'Submit', {
             fontSize: '24px',
             color: '#ffffff',
             backgroundColor: '#0073e6',
@@ -62,14 +69,22 @@ export class StartScene extends Phaser.Scene {
                 right: 10,
                 top: 10,
                 bottom: 10,
-            }
+            },
+        });
+        submitButton.setOrigin(0.5);
+
+        submitButton.setInteractive();
+        submitButton.on('pointerdown', () => {
+            // Retrieve the entered character name
+            const characterName = (nameInput.node as HTMLInputElement)?.value;
+            console.log({ characterName })
+
+            // Handle the character registration and transition to the main game scene
+            // Save the character's name to localStorage
+            localStorage.setItem('characterName', characterName);
+
+            this.scene.start('MainScene'); // Replace 'MainGame' with your actual game scene key
         });
 
-        playButton.setOrigin(0);
-        playButton.setInteractive();
-        playButton.on('pointerdown', () => {
-            // Start the game or transition to the next scene
-            this.scene.start('RegistrationScene');
-        });
     }
 }

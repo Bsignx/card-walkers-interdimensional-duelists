@@ -67,6 +67,9 @@ export class MainScene extends Phaser.Scene {
     }
 
     create() {
+        // Retrieve the character's name from localStorage
+        const characterName = localStorage.getItem('characterName');
+
         // background
         this.add.image(0, 0, 'bg').setOrigin(0, 0)
 
@@ -91,7 +94,7 @@ export class MainScene extends Phaser.Scene {
 
         // Display the character's name, class and health.
         const nameText = this.add.text(500, 20, '', { color: 'black', fontSize: '16px', fontStyle: 'bold', backgroundColor: '#fff' });
-        nameText.setText(`Name: ${character.name}\nClass: ${character.class}\nHealth: ${character.health}`);
+        nameText.setText(`Name: ${characterName || character.name}\nClass: ${character.class}\nHealth: ${character.health}`);
 
         // Example: Allow the player to select a skill by clicking on it.
         skillText.setInteractive();
