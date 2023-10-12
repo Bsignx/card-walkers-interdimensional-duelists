@@ -4,25 +4,15 @@ type Params = {
     cellHeight: number;
     rows: number;
     columns: number;
-    graphics: Phaser.GameObjects.Graphics;
+    scene: Phaser.Scene;
 }
 
-export const initializeGrid = ({ cellHeight, cellWidth, columns, rows, graphics, }: Params) => {
-    // Set the line style for grid lines (color, thickness).
-    graphics.lineStyle(1, 0x000000, 0.5);
+export const initializeGrid = ({ cellHeight, cellWidth, columns, rows, scene }: Params) => {
+    // Create a grid
+    const grid = scene.add.grid(200, 200, cellWidth * columns, cellHeight * rows, cellWidth, cellHeight, 0x0ffff)
 
-    // Draw horizontal grid lines.
-    for (var i = 0; i <= rows; i++) {
-        graphics.moveTo(0, i * cellHeight);
-        graphics.lineTo(columns * cellWidth, i * cellHeight);
-    }
+    grid.setOrigin(0.5);
 
-    // Draw vertical grid lines.
-    for (var j = 0; j <= columns; j++) {
-        graphics.moveTo(j * cellWidth, 0);
-        graphics.lineTo(j * cellWidth, rows * cellHeight);
-    }
 
-    graphics.closePath();
-    graphics.strokePath();
+    return grid;
 }

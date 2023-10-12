@@ -8,14 +8,20 @@ import './style.css'
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
-  width: 670,
-  height: 480,
+  width: 640,
+  height: 360,
   parent: document.getElementById('game') as HTMLElement,
   canvas: document.getElementById('game-canvas') as HTMLCanvasElement,
   dom: {
     createContainer: true,
   },
-  scene: [StartScene, RegistrationScene, MainScene],
+  physics: {
+    default: 'arcade',
+    arcade: {
+      gravity: { y: 0 },
+    },
+  },
+  scene: [MainScene, StartScene, RegistrationScene],
 }
 
 new Phaser.Game(config)

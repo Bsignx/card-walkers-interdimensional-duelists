@@ -27,21 +27,20 @@ const character = {
 
 export class MainScene extends Phaser.Scene {
     character: Phaser.GameObjects.Sprite;
-    character2: Phaser.Physics.Arcade.Sprite;
     diceRollButton!: Phaser.GameObjects.Text;
     cellWidth = 32;
     cellHeight = 32;
-    rows = 8;
-    columns = 8;
+    rows = 15;
+    columns = 21;
     isMoving = false;
 
     constructor() {
         super({ key: 'MainScene' })
         this.character = null!;
-        this.character2 = null!;
     }
 
     preload() {
+        this.load.image('bg', 'assets/bg.png')
 
         this.load.spritesheet('character-right', 'assets/character-right.png', {
             frameWidth: 48,   // Width of a single frame in pixels
@@ -71,28 +70,23 @@ export class MainScene extends Phaser.Scene {
         // Retrieve the character's name from localStorage
         const characterName = localStorage.getItem('characterName');
 
+        // background
+        this.add.image(0, 0, 'bg').setOrigin(0, 0)
+
         // Draw the grid.
-        const grid = initializeGrid({
-            scene: this,
+        initializeGrid({
+            graphics: this.add.graphics(),
             cellHeight: this.cellHeight,
             cellWidth: this.cellWidth,
             columns: this.columns,
             rows: this.rows,
         })
 
-        // Enable physics for the grid
-        this.physics.world.enable(grid);
-
-        // Create a coliddable character sprite and set its initial position (e.g., grid cell 0,0). 
-        this.character = this.physics.add.sprite(88, 88, 'character-right')
-        // this.character2 = this.physics.add.sprite(88, 88, 'character-right')
+        // Create a character sprite and set its initial position (e.g., grid cell 0,0).
+        this.character = this.add.sprite(16, 15, 'character-right')
 
         // Set the character's scale.
-        this.character.setScale(0.4, 0.4);
-
-
-        // Create colliders for the grid edges to prevent the character from moving outside the grid.
-        this.physics.world.setBounds(75, 75, this.columns * this.cellWidth, this.rows * this.cellHeight);
+        this.character.setScale(0.5, 0.5);
 
         // Display the character's skills.
         const skillText = this.add.text(500, 100, '', { color: 'black', fontSize: '16px', fontStyle: 'bold', backgroundColor: '#fff' });
@@ -151,54 +145,46 @@ export class MainScene extends Phaser.Scene {
         this?.input?.keyboard?.createCursorKeys();
 
         // Handle keyboard input to move the character.
-        this.input.keyboard?.on('keydown', (event: KeyboardEvent) => {
-
-            const { x, y } = this.character;
-
+        this?.input?.keyboard?.on('keydown', (event: KeyboardEvent) => {
             switch (event.code) {
                 case 'ArrowUp':
                     if (this.isMoving) return;
                     this.isMoving = true;
-                    this.moveCharacterAndAnimate(x, y - this.cellHeight, 'walk-up');
+                    this.moveAndAnimateCharacter(this.character.x, this.character.y - this.cellHeight, 'walk-up');
                     break;
                 case 'ArrowDown':
                     if (this.isMoving) return;
                     this.isMoving = true;
-                    this.moveCharacterAndAnimate(x, y + this.cellHeight, 'walk-down');
+                    this.moveAndAnimateCharacter(this.character.x, this.character.y + this.cellHeight, 'walk-down');
                     break;
                 case 'ArrowLeft':
                     if (this.isMoving) return;
                     this.isMoving = true;
-                    this.moveCharacterAndAnimate(x - this.cellWidth, y, 'walk-left');
+                    this.moveAndAnimateCharacter(this.character.x - this.cellWidth, this.character.y, 'walk-left');
                     break;
                 case 'ArrowRight':
                     if (this.isMoving) return;
                     this.isMoving = true;
-                    this.moveCharacterAndAnimate(x + this.cellWidth, y, 'walk-right');
+                    this.moveAndAnimateCharacter(this.character.x + this.cellWidth, this.character.y, 'walk-right');
                     break;
             }
         });
     }
 
-    moveCharacterAndAnimate(newX: number, newY: number, animationKey: string) {
-        if (!this.physics.world.bounds.contains(newX, newY)) {
-            // Character is trying to move outside the grid, prevent movement.
-            this.isMoving = false;
-            return;
-        }
+    moveAndAnimateCharacter(newX: number, newY: number, animationKey: string) {
+        this.character.anims.play(animationKey, true); // Play the specified animation
 
-        this.character.anims.play(animationKey, true);
-
+        // Tween the character's position to create a smooth movement.
         this.tweens.add({
             targets: this.character,
             x: newX,
             y: newY,
-            duration: 500,
-            ease: 'Linear',
+            duration: 500, // Duration of the movement animation in milliseconds
+            ease: 'Linear', // Linear easing for a constant speed
             onComplete: () => {
                 this.isMoving = false;
                 this.character.anims.stop();
-            },
+            }
         });
     }
 }
