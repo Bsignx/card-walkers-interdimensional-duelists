@@ -71,5 +71,26 @@ export class StartScene extends Phaser.Scene {
             // Start the game or transition to the next scene
             this.scene.start('RegistrationScene');
         });
+
+        // Add a continue button
+        const continueButton = this.add.text(280, 400, 'Continue', {
+            fontSize: '24px',
+            color: '#ffffff',
+            backgroundColor: '#0073e6',
+            padding: {
+                left: 10,
+                right: 10,
+                top: 10,
+                bottom: 10,
+            }
+        });
+
+        continueButton.setOrigin(0);
+        continueButton.setInteractive();
+
+        continueButton.on('pointerdown', () => {
+            // Start the game or transition to the next scene
+            this.scene.start('MainScene');
+        });
     }
 }

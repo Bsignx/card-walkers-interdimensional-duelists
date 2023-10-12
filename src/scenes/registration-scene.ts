@@ -8,10 +8,6 @@ export class RegistrationScene extends Phaser.Scene {
     preload() {
         // Load background image
         this.load.image('start-bg', 'assets/start-bg.jpg');
-
-        // Load background music
-        this.load.audio('backgroundMusic', 'assets/les-plaines-de-cania.mp3');
-
     }
 
     create() {
@@ -24,12 +20,6 @@ export class RegistrationScene extends Phaser.Scene {
 
         // Scale the background to fit the entire screen
         background.setScale(gameWidth / background.width, gameHeight / background.height);
-
-
-        // Play background music
-        const music = this.sound.add('backgroundMusic', { loop: true }); // Set loop to true for continuous playback
-        music.setVolume(0.3);
-        music.play();
 
         // Create input label
         this.add.text(150, 50, 'Enter your character name', {
