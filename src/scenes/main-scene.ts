@@ -26,19 +26,20 @@ const character = {
 };
 
 export class MainScene extends Phaser.Scene {
-    character: Phaser.GameObjects.Sprite;
-    character2: Phaser.Physics.Arcade.Sprite;
+    character!: Phaser.GameObjects.Sprite;
+    characterOffsetX = 104;
+    characterOffsetY = 104;
     diceRollButton!: Phaser.GameObjects.Text;
     cellWidth = 32;
     cellHeight = 32;
-    rows = 8;
-    columns = 8;
+    rows = 7;
+    columns = 7;
     isMoving = false;
+    mana = 100;
+    manaCost = 1;
 
     constructor() {
         super({ key: 'MainScene' })
-        this.character = null!;
-        this.character2 = null!;
     }
 
     preload() {
@@ -84,8 +85,8 @@ export class MainScene extends Phaser.Scene {
         this.physics.world.enable(grid);
 
         // Create a coliddable character sprite and set its initial position (e.g., grid cell 0,0). 
-        this.character = this.physics.add.sprite(88, 88, 'character-right')
-        // this.character2 = this.physics.add.sprite(88, 88, 'character-right')
+        this.character = this.physics.add.sprite(this.characterOffsetX, this.characterOffsetY, 'character-right')
+
 
         // Set the character's scale.
         this.character.setScale(0.4, 0.4);
@@ -176,6 +177,59 @@ export class MainScene extends Phaser.Scene {
                     this.isMoving = true;
                     this.moveCharacterAndAnimate(x + this.cellWidth, y, 'walk-right');
                     break;
+            }
+        });
+
+        // Show the character mana
+        const manaText = this.add.text(350, 150, '', { color: 'black', fontSize: '16px', fontStyle: 'bold', backgroundColor: '#fff' });
+        manaText.setText(`Mana: ${this.mana}`);
+
+        // Create a "Move" button
+        const moveButton = this.add.text(350, 250, 'Move', {
+            fontSize: '24px',
+            backgroundColor: '#00FF00',
+            color: '#000000',
+            padding: { x: 20, y: 10 },
+        });
+
+        // Make the button clickable
+        moveButton.setInteractive();
+
+        // Define a function to handle the button click
+        moveButton.on('pointerdown', () => {
+            // Check if the character has enough MANA to move
+            if (this.mana >= this.manaCost) {
+                // Deduct the MANA cost from the character's MANA attribute
+                this.mana -= this.manaCost;
+
+                // Update the MANA text
+                manaText.setText(`Mana: ${this.mana}`);
+
+                // Randomly move the character to a new grid position
+                const newX = (Phaser.Math.Between(0, this.rows - 1) * this.cellWidth) + this.characterOffsetX;
+                const newY = (Phaser.Math.Between(0, this.columns - 1) * this.cellHeight) + this.characterOffsetY;
+
+
+                // teleport with fade effect the character to the new position
+                this.tweens.add({
+                    targets: this.character,
+                    alpha: 0,
+                    duration: 500,
+                    onComplete: () => {
+                        // Teleport the character to the new position
+                        this.character.setPosition(newX, newY);
+                        // Use another tween to fade the character back in
+                        this.tweens.add({
+                            targets: this.character,
+                            alpha: 1, // Set alpha back to 1 for a fade-in effect
+                            duration: 500, // Duration of the fade effect in milliseconds
+                        });
+                    },
+                });
+            }
+            else {
+                // Display a message indicating the character doesn't have enough MANA
+                console.log("Not enough MANA to move.");
             }
         });
     }
