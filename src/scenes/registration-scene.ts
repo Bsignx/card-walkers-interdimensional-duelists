@@ -6,22 +6,22 @@ export class RegistrationScene extends Phaser.Scene {
   }
 
   preload () {
-    // Load background image
+    // * Load background image
     this.load.image('start-bg', 'assets/start-bg.jpg')
   }
 
   create () {
-    // Get the dimensions of the game's canvas
+    // * Get the dimensions of the game's canvas
     const gameWidth = this.game.config.width as number
     const gameHeight = this.game.config.height as number
 
-    // Add a background image or graphic
+    // * Add a background image or graphic
     const background = this.add.image(0, 0, 'start-bg').setOrigin(0, 0)
 
-    // Scale the background to fit the entire screen
+    // * Scale the background to fit the entire screen
     background.setScale(gameWidth / background.width, gameHeight / background.height)
 
-    // Create input label
+    // * Create input label
     this.add.text(150, 50, 'Enter your character name', {
       fontSize: '24px',
       color: '#ffffff',
@@ -42,14 +42,14 @@ export class RegistrationScene extends Phaser.Scene {
       }
     }).setOrigin(0)
 
-    // Create a text input field for the character's name
+    // * Create a text input field for the character's name
     const nameInput = this.add.dom(430, 200, 'input', 'background-color: #ffffff; padding: 10px; width: 200px; height: 20px; font: 14px Arial')
-    console.log({ nameInput })
-    // Set input field properties
-    nameInput.setScale(2) // Adjust the size as needed
+
+    // * Set input field properties
+    nameInput.setScale(2) // * Adjust the size as needed
     nameInput.addListener('keydown')
 
-    // Create a submit button
+    // * Create a submit button
     const submitButton = this.add.text(350, 300, 'Submit', {
       fontSize: '24px',
       color: '#ffffff',
@@ -65,15 +65,15 @@ export class RegistrationScene extends Phaser.Scene {
 
     submitButton.setInteractive()
     submitButton.on('pointerdown', () => {
-      // Retrieve the entered character name
+      // * Retrieve the entered character name
       const characterName = (nameInput.node as HTMLInputElement)?.value
       console.log({ characterName })
 
-      // Handle the character registration and transition to the main game scene
-      // Save the character's name to localStorage
+      // * Handle the character registration and transition to the main game scene
+      // * Save the character's name to localStorage
       localStorage.setItem('characterName', characterName)
 
-      this.scene.start('MainScene') // Replace 'MainGame' with your actual game scene key
+      this.scene.start('MainScene') // * Replace 'MainGame' with your actual game scene key
     })
   }
 }

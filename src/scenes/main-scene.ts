@@ -1,5 +1,6 @@
+import { createCharacterAnimations } from '../character/createAnimations'
 import Phaser from 'phaser'
-import { initializeGrid } from '../helpers/initializeGrid'
+import { initializeGrid } from '../grid/initializeGrid'
 import { DIMENSIONS, GRID_DIMENSIONS } from '../data/dimensions'
 
 const characterSkills = [
@@ -115,38 +116,11 @@ export class MainScene extends Phaser.Scene {
     })
 
     // * Define animations for different directions.
-    this.anims.create({
-      key: 'walk-right',
-      frames: this.anims.generateFrameNumbers('character-right', { start: 0, end: 4 }), // * Frames for walking up
-      frameRate: 10, // * Frames per second
-      repeat: -1 // * Infinite loop
-    })
-
-    this.anims.create({
-      key: 'walk-left',
-      frames: this.anims.generateFrameNumbers('character-left', { start: 0, end: 4 }), // * Frames for walking up
-      frameRate: 10, // * Frames per second
-      repeat: -1 // * Infinite loop
-    })
-
-    this.anims.create({
-      key: 'walk-down',
-      frames: this.anims.generateFrameNumbers('character-down', { start: 0, end: 4 }), // * Frames for walking up
-      frameRate: 10, // * Frames per second
-      repeat: -1 // * Infinite loop
-    })
-
-    this.anims.create({
-      key: 'walk-up',
-      frames: this.anims.generateFrameNumbers('character-up', { start: 0, end: 4 }), // * Frames for walking up
-      frameRate: 10, // * Frames per second
-      repeat: -1 // * Infinite loop
-    })
+    createCharacterAnimations(this)
 
     // * Enable keyboard input.
     this?.input?.keyboard?.createCursorKeys()
 
-    // * Handle keyboard input to move the character.
     this.input.keyboard?.on('keydown', (event: KeyboardEvent) => {
       const { x, y } = this.character
 
@@ -206,7 +180,7 @@ export class MainScene extends Phaser.Scene {
         const newX = (Phaser.Math.Between(0, this.rows - 1) * this.cellWidth) + this.characterOffsetX
         const newY = (Phaser.Math.Between(0, this.columns - 1) * this.cellHeight) + this.characterOffsetY
 
-        // * * teleport with fade effect the character to the new position
+        // * teleport with fade effect the character to the new position
         this.tweens.add({
           targets: this.character,
           alpha: 0,
@@ -259,7 +233,11 @@ export class MainScene extends Phaser.Scene {
     })
   }
 
-  moveCharacterAndAnimate (newX: number, newY: number, animationKey: string) {
+  moveCharacterAndAnimate (
+    newX: number,
+    newY: number,
+    animationKey: string
+  ) {
     if (!this.physics.world.bounds.contains(newX, newY)) {
       // * Character is trying to move outside the grid, prevent movement.
       this.isMoving = false

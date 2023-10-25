@@ -6,11 +6,12 @@ import { RegistrationScene } from './scenes/registration-scene'
 
 import './style.css'
 import { DimensionScene } from './scenes/dimension-scene'
+import { BattleScene } from './scenes/battle-scene'
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
-  width: 640,
-  height: 360,
+  width: 800,
+  height: 600,
   parent: document.getElementById('game') as HTMLElement,
   canvas: document.getElementById('game-canvas') as HTMLCanvasElement,
   dom: {
@@ -22,7 +23,10 @@ const config: Phaser.Types.Core.GameConfig = {
       gravity: { y: 0 }
     }
   },
-  scene: [MainScene, StartScene, RegistrationScene, DimensionScene]
+  scene: [DimensionScene, MainScene, StartScene, RegistrationScene, BattleScene],
+  scale: {
+    zoom: 2
+  }
 }
 
 new Phaser.Game(config)

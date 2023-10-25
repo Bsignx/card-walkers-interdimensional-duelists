@@ -1,0 +1,39 @@
+{
+  "frames": {
+    "stage_one.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 115,
+        "h": 286
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 6,
+        "y": 1,
+        "w": 115,
+        "h": 286
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 288
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "texture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 115,
+      "h": 286
+    },
+    "scale": 1
+  }
+}
