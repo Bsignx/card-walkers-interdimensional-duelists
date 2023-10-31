@@ -23,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
       gravity: { y: 0 }
     }
   },
-  scene: [DimensionScene, MainScene, StartScene, RegistrationScene, BattleScene],
+  scene: [BattleScene, DimensionScene, MainScene, StartScene, RegistrationScene],
   scale: {
     zoom: 2
   }
